@@ -92,25 +92,44 @@ int myString::Size () {
 // overloading = operator - initialize object with an existing string
 myString& myString::operator = (char* B) {
 
-	// TODO
+	myString word;
+	int i = 0;
+	while (B[i] != '\0')
+		i++;
+	word.size = i;
+	word.strArray = new char[word.size];
+	emptyString (word.strArray, word.size+1);
+	for (int j=0; j < word.size; j++)
+		word.strArray[j] = B[j];
 
-	return NULL;
+	return word;
 }
 
 // overloading = operator - initialize object with an existing mystring object
 myString& myString::operator = (myString& B) {
 
-	// TODO
-
-	return NULL;
+	myString word = B;
+	return word;
 }
 
 // checking if two myString objects are the same - return true or false
 bool myString::operator == (myString& B) {
 
-	// TODO
+	bool isSame = true;
+	if(this->size!=B.size){
+		isSame = false;
+	}
+	else{
+		for(int i=0; i<this->size; ++i){
+			char* a = this->getWord();
+			char* b = B.getWord();
+			if(a!=b){
+				isSame = false;
+			}
+		}
+	}
 
-	return false;
+	return isSame;
 }
 
 // comparison of myString A if less than myString B - return true or false
@@ -258,7 +277,36 @@ int bagOfWords::binarySearchAndInsert (myString& wordToFind)
 // method to add words to the bagOfWords object
 void bagOfWords::addWord(myString & newWord)
 {
-	// TODO
+	bool needToResize = true;
+	for(int i=0; i<this->_size; ++i){
+		if(newWord == this->_words[i]){
+			++this->_frequencies[i];
+			needToResize = false;
+		}
+	}
+	if(needToResize){
+		++this->_size ;
+		myString* newSize = new myString[this->_size];
+		int* newFeq = new int[this->_size];
+
+		for(int i=0; i< this->_size-1; ++i){
+			newSize[i] = this->_words[i];
+		}
+		for(int i=0; i< this->_size-1; ++i){
+			newFeq[i] = this->_frequencies[i];
+		}
+		newSize[this->_size-1] = newWord;
+		newFeq[this->_size-1] = 1;
+		this->_words = newSize;
+		this->_frequencies = newFeq;
+	}
+
+}
+
+bagOfWords::~bagOfWords(){
+	if(_words!=NULL) delete [] _words;
+	if(_frequencies!=NULL) delete [] _frequencies;
+	int size = 0;
 }
 
 
